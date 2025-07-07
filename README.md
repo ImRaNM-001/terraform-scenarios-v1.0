@@ -112,7 +112,14 @@ vault server -dev -dev-listen-address="0.0.0.0:8200"
 - Secret-data section, [NOTE: `password requirements: only lowercase alphanumeric characters and hyphens allowed`]  
   - username: **tf-vault-username**
   - password: **tf-XX-xxX4-0**  
-- Save the changes
+- Save the changes, should look like below,
+
+---
+<p align="center">
+  <img src="scenario-2-vault-integration/images/vault_secret_configured.png" alt="" width="800"/>
+</p>
+
+---
 
 7.3: Till here, none have access to this secret just self(devops) user.  
 Now the objective is to give terraform the access to it, hence we create a role inside the hashicorp vault (similar to IAM role).
@@ -157,15 +164,7 @@ path "*" {
   capabilities = ["list", "read"]
 }
 
-path "secrets/data/*" {
-  capabilities = ["create", "read", "update", "delete", "list"]
-}
-
 path "vault-secret/data/*" {
-  capabilities = ["create", "read", "update", "delete", "list"]
-}
-
-path "secret/data/*" {
   capabilities = ["create", "read", "update", "delete", "list"]
 }
 
@@ -249,11 +248,16 @@ Run this to see what Vault resources are available:
 terraform providers schema -json | jq '.provider_schemas."registry.terraform.io/hashicorp/vault".resource_schemas | keys'
 ```
 
-**Step 17:** Run terraform plan & terraform apply
-
+**Step 17:** Run,
+```sh
+terraform plan 
+ 
+terraform apply
+```
 Finally creates s3 bucket named "tf-XX-xxX4-0"
 ```sh
 aws s3 ls
+
 2025-04-08 12:45:46 bucket-1
 2025-04-10 14:06:59 bucket-xyz
 2025-07-02 19:49:27 task-3-remote-backend
